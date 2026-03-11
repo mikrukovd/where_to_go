@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Places, PlaceImage
+from .models import Place, PlaceImage
 
 
 class PlaceImageInline(admin.TabularInline):
@@ -12,5 +12,5 @@ class PlacesAdmin(admin.ModelAdmin):
     inlines = [PlaceImageInline]
 
 
-admin.site.register(Places, PlacesAdmin)
+admin.site.register(Place, PlacesAdmin)
 admin.site.register(PlaceImage)

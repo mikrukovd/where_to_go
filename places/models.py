@@ -2,7 +2,7 @@ from django.db import models
 
 
 # Create your models here.
-class Places(models.Model):
+class Place(models.Model):
     title = models.CharField(
         max_length=255,
         verbose_name='Название',
@@ -31,7 +31,7 @@ class Places(models.Model):
 
 class PlaceImage(models.Model):
     place = models.ForeignKey(
-        Places,
+        Place,
         on_delete=models.CASCADE,
         related_name='images',
         verbose_name='Место'
