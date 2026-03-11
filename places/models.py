@@ -24,3 +24,29 @@ class Places(models.Model):
         verbose_name='Широта',
         blank=True, null=True
     )
+
+    def __str__(self):
+        return self.title
+
+
+class PlaceImage(models.Model):
+    place = models.ForeignKey(
+        Places,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='Место'
+    )
+    image = models.ImageField(
+        upload_to='places/',
+        verbose_name='Изображение'
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Порядок'
+    )
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f'{self.order} - {self.place.title}'
