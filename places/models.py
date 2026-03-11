@@ -37,7 +37,6 @@ class PlaceImage(models.Model):
         verbose_name='Место'
     )
     image = models.ImageField(
-        upload_to='places/',
         verbose_name='Изображение'
     )
     order = models.PositiveIntegerField(
