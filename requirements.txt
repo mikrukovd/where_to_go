@@ -1,3 +1,4 @@
 Django==5.2
 environs==14.6.0
 pillow==12.1.1
+django-admin-sortable2-2.3.1
