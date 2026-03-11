@@ -37,11 +37,11 @@ class PlaceImage(models.Model):
         verbose_name='Место'
     )
     image = models.ImageField(
-        verbose_name='Изображение'
+        verbose_name='Картинка'
     )
     order = models.PositiveIntegerField(
         default=0,
-        verbose_name='Порядок'
+        verbose_name='Позиция'
     )
 
     class Meta:
