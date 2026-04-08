@@ -106,6 +106,26 @@ where_to_go/
 - `image` — файл изображения
 - `order` — порядок отображения
 
+## Команда загрузки данных
+
+### `load_place` — загрузка мест из JSON по URL
+
+Команда скачивает JSON-файл с указанным URL и создаёт (или обновляет) места в базе данных, включая загрузку изображений.
+
+```bash
+python manage.py load_place <URL>
+```
+
+**Пример:**
+```bash
+python manage.py load_place https://raw.githubusercontent.com/devmanorg/where-to-go-places/master/places/Антикафе%20Bizone.json
+```
+
+Команда:
+- Создаёт новые места или обновляет существующие (по `title`)
+- Скачивает изображения по URL из поля `images` и сохраняет в `ImageField`
+- Поддерживает поля: `title`, `lng`/`longitude`, `lat`/`latitude`, `description_short`, `description_long`
+
 ## API
 
 - `GET /` — главная страница с картой
