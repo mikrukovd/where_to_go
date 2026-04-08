@@ -16,6 +16,7 @@
   - django-tinymce — WYSIWYG-редактор для описаний
   - environs — управление переменными окружения
   - Pillow — работа с изображениями
+  - requests - работа с url
 
 ## Установка
 
@@ -70,27 +71,6 @@
 - Загружать фотографии для каждого места
 - Менять порядок отображения фотографий (drag-and-drop)
 - Использовать визуальный редактор для полного описания
-
-## Структура проекта
-
-```
-where_to_go/
-├── manage.py
-├── requirements.txt
-├── places/                 # Приложение с моделями мест
-│   ├── models.py           # Place, PlaceImage
-│   ├── admin.py            # Настройка админки
-│   └── views.py
-├── where_to_go/            # Основной проект Django
-│   ├── settings.py
-│   ├── urls.py
-│   └── views.py            # show_index, place_detail
-├── templates/
-│   └── index.html          # Главная страница с картой
-├── media/                  # Загруженные изображения
-└── static/
-    └── where_to_go/        # Статические файлы (CSS, JS, иконки)
-```
 
 ## Модели данных
 
