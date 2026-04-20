@@ -9,11 +9,9 @@ class Place(models.Model):
     )
     description_short = models.TextField(
         verbose_name='Краткое описание',
-        blank=True, null=True
     )
     description_long = tinymce_models.HTMLField(
         verbose_name='Полное описание',
-        blank=True, null=True
     )
     lng = models.FloatField(
         verbose_name='Долгота',
@@ -45,6 +43,10 @@ class PlaceImage(models.Model):
 
     class Meta:
         ordering = ['order']
+
+        indexes = [
+            models.Index(fields=['order'])
+        ]
 
     def __str__(self):
         return f'{self.order} - {self.place.title}'
