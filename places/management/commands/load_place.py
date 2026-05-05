@@ -31,7 +31,7 @@ class Command(BaseCommand):
             long_description = place_detail['description_long']
             imgs = place_detail['imgs']
 
-            place, created = Place.objects.get_or_create(
+            place, created = Place.objects.update_or_create(
                 title=title,
                 defaults={
                     'lng': lng,
@@ -42,14 +42,9 @@ class Command(BaseCommand):
             )
 
             if created:
-                self.stdout.write(self.style.SUCCESS(f'Создано место: {title}'))
+                self.stdout.write(self.style.SUCCESS(f'Создано место: {title}\n'))
             else:
-                self.stdout.write(self.style.WARNING(f'Место уже существует, обновляем: {title}'))
-                place.lng = lng
-                place.lat = lat
-                place.short_description = short_description
-                place.long_description = long_description
-                place.save()
+                self.stdout.write(self.style.WARNING(f'Место уже существует, обновляем: {title}\n'))
                 place.images.all().delete()
 
             for idx, image_url in enumerate(imgs):
