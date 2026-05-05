@@ -23,6 +23,10 @@ class Place(models.Model):
         default=0.0
     )
 
+    class Meta:
+        verbose_name = 'Место'
+        verbose_name_plural = 'Места'
+
     def __str__(self):
         return self.title
 
