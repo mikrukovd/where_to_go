@@ -54,10 +54,16 @@ class Command(BaseCommand):
                     img_response = requests.get(image_url)
                     img_response.raise_for_status()
                     image_name = image_url.split('/')[-1]
+
                     if not image_name or '.' not in image_name:
                         image_name = f'image_{idx}.jpg'
+
                     image_file = ContentFile(img_response.content, name=image_name)
-                    PlaceImage.objects.create(place=place, image=image_file, order=idx)
+                    PlaceImage.objects.create(
+                        place=place,
+                        image=image_file,
+                        order=idx
+                    )
                     self.stdout.write(self.style.SUCCESS(f'Добавлено изображение: {image_name}'))
                 except requests.exceptions.RequestException as e:
                     self.stdout.write(self.style.ERROR(f'Ошибка загрузки изображения {image_url}: {e}'))
