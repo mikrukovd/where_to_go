@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+
 from places.models import Place
 
 
@@ -16,7 +18,7 @@ def show_index(request):
             'properties': {
                 'title': place.title,
                 'placeId': place.id,
-                'detailsUrl': f'/places/{place.id}/'
+                'detailsUrl': reverse('place_detail', args=[place.id])
             }
         }
         for place in places
@@ -31,18 +33,17 @@ def show_index(request):
 
 
 def place_detail(request, place_id):
-    place = get_object_or_404(Place, id=place_id)
+    place = get_object_or_404(Place.objects.prefetch_related('images'), id=place_id)
 
     response = {
         'title': place.title,
         'imgs': [img.image.url for img in place.images.all()],
-        'description_short': place.description_short,
-        'description_long': place.description_long,
+        'short_description': place.short_description,
+        'long_description': place.long_description,
         'coordinates': {
             'lng': place.lng,
             'lat': place.lat
         }
     }
 
-    # json_dumps_params={'ensure_ascii': False} для русских букв
     return JsonResponse(response, json_dumps_params={'ensure_ascii': False})

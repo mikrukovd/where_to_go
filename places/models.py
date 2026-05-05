@@ -5,12 +5,13 @@ from tinymce import models as tinymce_models
 class Place(models.Model):
     title = models.CharField(
         max_length=255,
+        unique=True,
         verbose_name='Название',
     )
-    description_short = models.TextField(
+    short_description = models.TextField(
         verbose_name='Краткое описание',
     )
-    description_long = tinymce_models.HTMLField(
+    long_description = tinymce_models.HTMLField(
         verbose_name='Полное описание',
     )
     lng = models.FloatField(
