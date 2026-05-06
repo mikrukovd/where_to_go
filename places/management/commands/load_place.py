@@ -22,50 +22,47 @@ class Command(BaseCommand):
         except ValueError as e:
             raise CommandError(f'Ошибка парсинга JSON: {e}')
 
-        place_details = [place_raw]
-        for place_detail in place_details:
-            title = place_detail['title']
-            lng = float(place_detail['coordinates']['lng'])
-            lat = float(place_detail['coordinates']['lat'])
-            short_description = place_detail['description_short']
-            long_description = place_detail['description_long']
-            imgs = place_detail['imgs']
+        title = place_raw['title']
+        lng = float(place_raw['coordinates']['lng'])
+        lat = float(place_raw['coordinates']['lat'])
+        short_description = place_raw['description_short']
+        long_description = place_raw['description_long']
+        imgs = place_raw['imgs']
 
-            place, created = Place.objects.update_or_create(
-                title=title,
-                defaults={
-                    'lng': lng,
-                    'lat': lat,
-                    'short_description': short_description,
-                    'long_description': long_description,
-                }
-            )
+        place, created = Place.objects.update_or_create(
+            title=title,
+            defaults={
+                'lng': lng,
+                'lat': lat,
+                'short_description': short_description,
+                'long_description': long_description,
+            }
+        )
+        if created:
+            self.stdout.write(self.style.SUCCESS(f'Создано место: {title}\n'))
+        else:
+            self.stdout.write(self.style.WARNING(f'Место уже существует, обновляем: {title}\n'))
+            place.images.all().delete()
 
-            if created:
-                self.stdout.write(self.style.SUCCESS(f'Создано место: {title}\n'))
-            else:
-                self.stdout.write(self.style.WARNING(f'Место уже существует, обновляем: {title}\n'))
-                place.images.all().delete()
+        for idx, image_url in enumerate(imgs):
+            if not image_url:
+                continue
+            try:
+                img_response = requests.get(image_url)
+                img_response.raise_for_status()
+                image_name = image_url.split('/')[-1]
 
-            for idx, image_url in enumerate(imgs):
-                if not image_url:
-                    continue
-                try:
-                    img_response = requests.get(image_url)
-                    img_response.raise_for_status()
-                    image_name = image_url.split('/')[-1]
+                if not image_name or '.' not in image_name:
+                    image_name = f'image_{idx}.jpg'
 
-                    if not image_name or '.' not in image_name:
-                        image_name = f'image_{idx}.jpg'
+                image_file = ContentFile(img_response.content, name=image_name)
+                PlaceImage.objects.create(
+                    place=place,
+                    image=image_file,
+                    order=idx
+                )
+                self.stdout.write(self.style.SUCCESS(f'Добавлено изображение: {image_name}'))
+            except requests.exceptions.RequestException as e:
+                self.stdout.write(self.style.ERROR(f'Ошибка загрузки изображения {image_url}: {e}'))
 
-                    image_file = ContentFile(img_response.content, name=image_name)
-                    PlaceImage.objects.create(
-                        place=place,
-                        image=image_file,
-                        order=idx
-                    )
-                    self.stdout.write(self.style.SUCCESS(f'Добавлено изображение: {image_name}'))
-                except requests.exceptions.RequestException as e:
-                    self.stdout.write(self.style.ERROR(f'Ошибка загрузки изображения {image_url}: {e}'))
-
-        self.stdout.write(self.style.SUCCESS(f'\nЗагружено/обновлено мест: {title}'))
+        self.stdout.write(self.style.SUCCESS(f'\nЗагружено/обновлено место: {title}'))
